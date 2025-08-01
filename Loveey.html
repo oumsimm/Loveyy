@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Girlfriend's Day</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #a0522d 0%, #8b4513 100%);
+      min-height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      transition: background 1.5s;
+    }
+    .pulse-bg {
+      animation: bgPulse 2.5s cubic-bezier(.68,-0.55,.27,1.55) 1;
+    }
+    @keyframes bgPulse {
+      0% { background: linear-gradient(135deg, #a0522d 0%, #8b4513 100%); }
+      40% { background: linear-gradient(135deg, #c97a6a 0%, #a0522d 100%); }
+      60% { background: linear-gradient(135deg, #ffb6c1 0%, #a0522d 100%); }
+      100% { background: linear-gradient(135deg, #a0522d 0%, #8b4513 100%); }
+    }
+    .envelope-img {
+      width: 320px;
+      max-width: 90vw;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s, opacity 0.7s;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      border-radius: 18px;
+      background: transparent;
+      z-index: 20;
+      position: relative;
+      display: block;
+      margin: 0 auto;
+    }
+    .envelope-img:hover {
+      transform: scale(1.04) rotate(-2deg);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.22);
+    }
+    .envelope-img.opening {
+      animation: envelopeOpen 1.2s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+    }
+    @keyframes envelopeOpen {
+      0% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg) translateY(0);
+      }
+      60% {
+        opacity: 1;
+        transform: scale(1.15) rotate(-8deg) translateY(-30px);
+      }
+      80% {
+        opacity: 0.7;
+        transform: scale(1.25) rotate(-8deg) translateY(-80px);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.3) rotate(-8deg) translateY(-120px);
+      }
+    }
+    .sparkle-burst, .heart-burst {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      pointer-events: none;
+      z-index: 30;
+      opacity: 0;
+    }
+    .burst-animate {
+      animation: burst 1.2s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+    }
+    @keyframes burst {
+      0% { opacity: 0; transform: scale(0.5) translate(-50%, -50%); }
+      20% { opacity: 1; transform: scale(1.2) translate(-50%, -50%); }
+      80% { opacity: 1; }
+      100% { opacity: 0; transform: scale(1.8) translate(-50%, -120px); }
+    }
+    .heart-trail {
+      position: absolute;
+      left: 50%;
+      top: 60%;
+      pointer-events: none;
+      z-index: 25;
+      font-size: 2.2rem;
+      opacity: 0;
+    }
+    .heart-trail-animate {
+      animation: heartTrail 1.2s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+    }
+    @keyframes heartTrail {
+      0% { opacity: 0; transform: scale(0.7) translate(-50%, 0); }
+      20% { opacity: 1; transform: scale(1.1) translate(-50%, -20px); }
+      80% { opacity: 1; }
+      100% { opacity: 0; transform: scale(1.3) translate(-50%, -120px); }
+    }
+    .petal {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      pointer-events: none;
+      z-index: 40;
+      opacity: 0.85;
+      animation: fallPetal 6s linear infinite;
+    }
+    @keyframes fallPetal {
+      0% { transform: translateY(-40px) rotate(0deg) scale(1); opacity: 0.7; }
+      10% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg) scale(1.1); opacity: 0; }
+    }
+    .photo-bg {
+      position: absolute;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+    }
+    .photo-bg.visible {
+      opacity: 1;
+      transition: opacity 1s cubic-bezier(.68,-0.55,.27,1.55);
+    }
+    .photo-pop {
+      position: absolute;
+      width: 170px;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      opacity: 0;
+      transform: scale(0.7) translateY(40px);
+      transition: opacity 0.7s, transform 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+    }
+    .photo-bg.visible .photo-pop {
+      opacity: 1;
+      transform: scale(1.1) translateY(-10px);
+      animation: photoBounce 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+    }
+    @keyframes photoBounce {
+      0% { transform: scale(0.7) translateY(40px); }
+      60% { transform: scale(1.15) translateY(-20px); }
+      80% { transform: scale(0.95) translateY(0); }
+      100% { transform: scale(1.1) translateY(-10px); }
+    }
+    .photo-bg.visible .photo-pop:nth-child(1) { left: 5vw; top: 18vh; transition-delay: 0.2s; }
+    .photo-bg.visible .photo-pop:nth-child(2) { left: 8vw; top: 55vh; transition-delay: 0.4s; }
+    .photo-bg.visible .photo-pop:nth-child(3) { left: 12vw; top: 35vh; transition-delay: 0.6s; }
+    .photo-bg.visible .photo-pop:nth-child(4) { right: 8vw; top: 25vh; transition-delay: 0.8s; }
+    .photo-bg.visible .photo-pop:nth-child(5) { right: 10vw; top: 60vh; transition-delay: 1s; }
+    #content, .heart-container { display: none; }
+    #content.content-visible, .heart-container.visible { display: block; }
+    .romantic-glow {
+      animation: romanticGlow 2.5s ease-in-out 1;
+    }
+    @keyframes romanticGlow {
+      0% { box-shadow: 0 0 0 0 #ffb6c1; }
+      50% { box-shadow: 0 0 80px 40px #ffb6c1cc; }
+      100% { box-shadow: 0 0 0 0 #ffb6c1; }
+    }
+    .fade-slide-in {
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeSlideIn 1.2s 0.5s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+    }
+    @keyframes fadeSlideIn {
+      0% { opacity: 0; transform: translateY(40px); }
+      60% { opacity: 1; transform: translateY(-10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    /* Floating sparkles after reveal */
+    .floating-sparkle {
+      position: absolute;
+      pointer-events: none;
+      z-index: 50;
+      font-size: 1.5rem;
+      opacity: 0.7;
+      animation: floatSparkle 4s linear infinite;
+    }
+    @keyframes floatSparkle {
+      0% { opacity: 0; transform: translateY(0) scale(0.7); }
+      10% { opacity: 1; }
+      50% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-60px) scale(1.2); }
+    }
+    /* Animated ILOVEYOU letters */
+    .love-letter {
+      display: inline-block;
+      opacity: 0;
+      transform: scale(0.7) translateY(20px);
+      animation: popLetter 0.7s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+    }
+    @keyframes popLetter {
+      0% { opacity: 0; transform: scale(0.7) translateY(20px); }
+      60% { opacity: 1; transform: scale(1.2) translateY(-8px); }
+      80% { opacity: 1; transform: scale(0.95) translateY(0); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center h-screen text-white font-serif overflow-hidden">
+
+  <!-- Envelope Image (centered, only visible at first) -->
+  <img id="envelope-img" class="envelope-img" src="https://pngimg.com/d/envelope_PNG18366.png" alt="Pink Envelope" />
+  <!-- Sparkle and Heart Burst (hidden, shown on open) -->
+  <span id="sparkle-burst" class="sparkle-burst" style="font-size:3rem;">✨</span>
+  <span id="heart-burst" class="heart-burst" style="font-size:2.5rem;">💖💗💕</span>
+  <!-- Heart Trail (hidden, shown on open) -->
+  <span id="heart-trail" class="heart-trail">💗💖💕</span>
+  <!-- Falling Petals (created by JS) -->
+  <div id="petal-container"></div>
+
+  <!-- Photos Background (Hidden Initially) -->
+  <div id="photo-bg" class="photo-bg">
+    <img class="photo-pop" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=400&q=80" alt="Photo 1" />
+    <img class="photo-pop" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=400&q=80" alt="Photo 2" />
+    <img class="photo-pop" src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=facearea&w=400&q=80" alt="Photo 3" />
+    <img class="photo-pop" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=facearea&w=400&q=80" alt="Photo 4" />
+    <img class="photo-pop" src="https://images.unsplash.com/photo-1465101178521-c1a9136a3b41?auto=format&fit=facearea&w=400&q=80" alt="Photo 5" />
+  </div>
+
+  <!-- Content Container (Hidden Initially) -->
+  <div id="content" class="absolute inset-0 flex items-center justify-center z-10">
+    <div class="heart-container absolute inset-0">
+      <div class="floating-heart">💖</div>
+      <div class="floating-heart">💕</div>
+      <div class="floating-heart">💗</div>
+      <div class="floating-heart">💓</div>
+      <div class="floating-heart">💝</div>
+      <div class="floating-heart">💖</div>
+      <div class="floating-heart">💕</div>
+      <div class="floating-heart">💗</div>
+      <div class="floating-heart">💓</div>
+    </div>
+    <div class="text-center space-y-8 p-6 fade-slide-in relative z-10">
+      <h1 class="text-4xl sm:text-6xl font-bold text-pink-200 animate-pulse love-glow">
+        Happy Girlfriend's Day 💖
+      </h1>
+      <div class="space-y-4">
+        <p class="text-xl sm:text-2xl text-pink-100 rainbow-text">
+          Loveey, you are my everything 🌹
+        </p>
+        <!-- Animated ILOVEYOU -->
+        <div id="iloveyou-animated" class="text-3xl sm:text-4xl font-bold"></div>
+        <p class="text-lg sm:text-xl text-pink-100 floating">
+          More than words can ever express 💕
+        </p>
+      </div>
+      <div class="flex justify-center space-x-4">
+        <div class="text-6xl heart-beat text-pink-300">❤️</div>
+        <div class="text-6xl heart-beat text-pink-300" style="animation-delay: 0.5s;">💖</div>
+        <div class="text-6xl heart-beat text-pink-300" style="animation-delay: 1s;">💕</div>
+      </div>
+      <div class="flex justify-center space-x-2 mt-4" id="sparkle-container"></div>
+      <div class="mt-8 p-4 bg-pink-900/30 rounded-lg backdrop-blur-sm">
+        <p class="text-lg text-pink-100 italic">
+          "Every moment with you is a beautiful dream come true" 💫
+        </p>
+      </div>
+      <div class="text-4xl rotate mt-4">🌹</div>
+    </div>
+  </div>
+
+  <script>
+    // Hide all content and hearts initially
+    document.getElementById('content').classList.remove('content-visible');
+    document.querySelector('.heart-container').classList.remove('visible');
+    document.getElementById('photo-bg').classList.remove('visible');
+    document.getElementById('sparkle-burst').style.display = 'none';
+    document.getElementById('heart-burst').style.display = 'none';
+    document.getElementById('heart-trail').style.display = 'none';
+
+    // Create falling petals
+    function createPetals() {
+      const petalContainer = document.getElementById('petal-container');
+      for (let i = 0; i < 18; i++) {
+        const petal = document.createElement('img');
+        petal.src = 'https://pngimg.com/uploads/rose/rose_PNG669.png';
+        petal.className = 'petal';
+        petal.style.left = Math.random() * 100 + 'vw';
+        petal.style.animationDelay = (Math.random() * 6) + 's';
+        petal.style.opacity = 0.7 + Math.random() * 0.3;
+        petalContainer.appendChild(petal);
+      }
+    }
+    createPetals();
+
+    // Envelope click event
+    document.getElementById('envelope-img').addEventListener('click', function() {
+      // Animate envelope
+      this.classList.add('opening');
+      // Show sparkles and hearts burst
+      const sparkle = document.getElementById('sparkle-burst');
+      const heart = document.getElementById('heart-burst');
+      const heartTrail = document.getElementById('heart-trail');
+      sparkle.style.display = 'block';
+      heart.style.display = 'block';
+      heartTrail.style.display = 'block';
+      sparkle.classList.add('burst-animate');
+      heart.classList.add('burst-animate');
+      heartTrail.classList.add('heart-trail-animate');
+      // Pulse background
+      document.body.classList.add('pulse-bg');
+      setTimeout(() => {
+        document.getElementById('envelope-img').style.display = 'none';
+        sparkle.style.display = 'none';
+        heart.style.display = 'none';
+        heartTrail.style.display = 'none';
+        document.getElementById('photo-bg').classList.add('visible');
+        document.getElementById('content').classList.add('content-visible','romantic-glow');
+        document.querySelector('.heart-container').classList.add('visible');
+        // Floating sparkles
+        createFloatingSparkles();
+        // Animated ILOVEYOU
+        animateILoveYou();
+        // Remove bg pulse after animation
+        setTimeout(()=>document.body.classList.remove('pulse-bg'), 2500);
+      }, 1200);
+    });
+
+    // Floating sparkles after reveal
+    function createFloatingSparkles() {
+      const sparkleContainer = document.getElementById('sparkle-container');
+      sparkleContainer.innerHTML = '';
+      for (let i = 0; i < 10; i++) {
+        const s = document.createElement('span');
+        s.className = 'floating-sparkle';
+        s.textContent = '✨';
+        s.style.left = (10 + Math.random() * 80) + '%';
+        s.style.top = (10 + Math.random() * 70) + '%';
+        s.style.animationDelay = (Math.random() * 3) + 's';
+        sparkleContainer.appendChild(s);
+      }
+    }
+
+    // Animated ILOVEYOU
+    function animateILoveYou() {
+      const text = 'ILOVEYOU';
+      const container = document.getElementById('iloveyou-animated');
+      container.innerHTML = '';
+      for (let i = 0; i < text.length; i++) {
+        const span = document.createElement('span');
+        span.textContent = text[i];
+        span.className = 'love-letter';
+        span.style.animationDelay = (0.2 + i * 0.13) + 's';
+        container.appendChild(span);
+      }
+    }
+  </script>
+
+</body>
+</html>
