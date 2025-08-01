@@ -97,18 +97,30 @@
     }
     .petal {
       position: fixed;
-      width: 36px;
-      height: 36px;
       pointer-events: none;
       z-index: 40;
       opacity: 0.85;
-      animation: fallPetal 6s linear infinite;
+      will-change: transform, opacity;
+      font-size: 2.2rem;
+      animation: fallPetal 7s linear infinite;
+      width: auto;
+      height: auto;
+      background: none;
+      border: none;
     }
     @keyframes fallPetal {
-      0% { transform: translateY(-40px) rotate(0deg) scale(1); opacity: 0.7; }
+      0% {
+        opacity: 0;
+        transform: translateY(-40px) scale(var(--scale,1)) rotate(var(--rot,0deg)) translateX(0);
+      }
       10% { opacity: 1; }
+      30% { transform: translateY(30vh) scale(var(--scale,1)) rotate(var(--rot,0deg)) translateX(var(--sway,0px)); }
+      60% { transform: translateY(60vh) scale(var(--scale,1)) rotate(var(--rot,0deg)) translateX(calc(var(--sway,0px) * -1)); }
       80% { opacity: 1; }
-      100% { transform: translateY(110vh) rotate(360deg) scale(1.1); opacity: 0; }
+      100% {
+        opacity: 0;
+        transform: translateY(110vh) scale(var(--scale,1)) rotate(var(--rot,0deg)) translateX(0);
+      }
     }
     .photo-bg {
       position: absolute;
@@ -146,11 +158,28 @@
       80% { transform: scale(0.95) translateY(0); }
       100% { transform: scale(1.1) translateY(-10px); }
     }
-    .photo-bg.visible .photo-pop:nth-child(1) { left: 5vw; top: 18vh; transition-delay: 0.2s; }
-    .photo-bg.visible .photo-pop:nth-child(2) { left: 8vw; top: 55vh; transition-delay: 0.4s; }
-    .photo-bg.visible .photo-pop:nth-child(3) { left: 12vw; top: 35vh; transition-delay: 0.6s; }
-    .photo-bg.visible .photo-pop:nth-child(4) { right: 8vw; top: 25vh; transition-delay: 0.8s; }
-    .photo-bg.visible .photo-pop:nth-child(5) { right: 10vw; top: 60vh; transition-delay: 1s; }
+    /* Arrange photos: 3 left, 2 right, arc/column, responsive */
+    .photo-bg.visible #photo1 { left: 6vw; top: 25vh; transition-delay: 0.2s; }
+    .photo-bg.visible #photo2 { left: 10vw; top: 45vh; transition-delay: 0.4s; }
+    .photo-bg.visible #photo3 { left: 14vw; top: 65vh; transition-delay: 0.6s; }
+    .photo-bg.visible #photo4 { right: 10vw; top: 35vh; transition-delay: 0.8s; }
+    .photo-bg.visible #photo5 { right: 14vw; top: 55vh; transition-delay: 1s; }
+    @media (max-width: 900px) {
+      .photo-pop { width: 120px; height: 120px; }
+      .photo-bg.visible #photo1 { left: 2vw; top: 18vh; }
+      .photo-bg.visible #photo2 { left: 6vw; top: 38vh; }
+      .photo-bg.visible #photo3 { left: 10vw; top: 58vh; }
+      .photo-bg.visible #photo4 { right: 6vw; top: 28vh; }
+      .photo-bg.visible #photo5 { right: 10vw; top: 48vh; }
+    }
+    @media (max-width: 600px) {
+      .photo-pop { width: 80px; height: 80px; }
+      .photo-bg.visible #photo1 { left: 10vw; top: 18vh; }
+      .photo-bg.visible #photo2 { left: 18vw; top: 38vh; }
+      .photo-bg.visible #photo3 { left: 10vw; top: 58vh; }
+      .photo-bg.visible #photo4 { right: 10vw; top: 28vh; }
+      .photo-bg.visible #photo5 { right: 18vw; top: 48vh; }
+    }
     #content, .heart-container { display: none; }
     #content.content-visible, .heart-container.visible { display: block; }
     .romantic-glow {
@@ -215,11 +244,11 @@
 
   <!-- Photos Background (Hidden Initially) -->
   <div id="photo-bg" class="photo-bg">
-    <img class="photo-pop" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=400&q=80" alt="Photo 1" />
-    <img class="photo-pop" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=400&q=80" alt="Photo 2" />
-    <img class="photo-pop" src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=facearea&w=400&q=80" alt="Photo 3" />
-    <img class="photo-pop" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=facearea&w=400&q=80" alt="Photo 4" />
-    <img class="photo-pop" src="https://images.unsplash.com/photo-1465101178521-c1a9136a3b41?auto=format&fit=facearea&w=400&q=80" alt="Photo 5" />
+    <img class="photo-pop" id="photo1" src="1.jpg" alt="Photo 1" />
+    <img class="photo-pop" id="photo2" src="2.jpg" alt="Photo 2" />
+    <img class="photo-pop" id="photo3" src="3.jpg" alt="Photo 3" />
+    <img class="photo-pop" id="photo4" src="4.jpg" alt="Photo 4" />
+    <img class="photo-pop" id="photo5" src="5.jpg" alt="Photo 5" />
   </div>
 
   <!-- Content Container (Hidden Initially) -->
@@ -241,7 +270,7 @@
       </h1>
       <div class="space-y-4">
         <p class="text-xl sm:text-2xl text-pink-100 rainbow-text">
-          Loveey, you are my everything 🌹
+          Loveey, Thank you for giving me a chance to prove my self to you 🌹
         </p>
         <!-- Animated ILOVEYOU -->
         <div id="iloveyou-animated" class="text-3xl sm:text-4xl font-bold"></div>
@@ -276,14 +305,27 @@
     // Create falling petals
     function createPetals() {
       const petalContainer = document.getElementById('petal-container');
-      for (let i = 0; i < 18; i++) {
-        const petal = document.createElement('img');
-        petal.src = 'https://pngimg.com/uploads/rose/rose_PNG669.png';
-        petal.className = 'petal';
-        petal.style.left = Math.random() * 100 + 'vw';
-        petal.style.animationDelay = (Math.random() * 6) + 's';
-        petal.style.opacity = 0.7 + Math.random() * 0.3;
-        petalContainer.appendChild(petal);
+      petalContainer.innerHTML = '';
+      const hearts = ['❤️','💖','💗','💕','💓','💝'];
+      for (let i = 0; i < 22; i++) {
+        const span = document.createElement('span');
+        span.className = 'petal';
+        span.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+        // Randomize start position, size, sway, speed, and rotation
+        const left = Math.random() * 100;
+        const scale = 0.7 + Math.random() * 0.7;
+        const sway = 30 + Math.random() * 40;
+        const rot = Math.floor(Math.random() * 360) + 'deg';
+        const delay = (Math.random() * 7) + 's';
+        const duration = 6 + Math.random() * 4;
+        span.style.left = left + 'vw';
+        span.style.setProperty('--scale', scale);
+        span.style.setProperty('--sway', sway + 'px');
+        span.style.setProperty('--rot', rot);
+        span.style.animationDelay = delay;
+        span.style.animationDuration = duration + 's';
+        span.style.opacity = 0.7 + Math.random() * 0.3;
+        petalContainer.appendChild(span);
       }
     }
     createPetals();
@@ -338,7 +380,7 @@
 
     // Animated ILOVEYOU
     function animateILoveYou() {
-      const text = 'ILOVEYOU';
+      const text = 'I LOVE YOU';
       const container = document.getElementById('iloveyou-animated');
       container.innerHTML = '';
       for (let i = 0; i < text.length; i++) {
